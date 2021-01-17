@@ -1,5 +1,6 @@
 package util;
 
+import model.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -13,14 +14,14 @@ public class HibernateUtils {
 
             Configuration configuration = new Configuration();
 
-//            configuration.addAnnotatedClass(Client.class);
-//            configuration.addAnnotatedClass(Movie.class);
-//            configuration.addAnnotatedClass(Reservation.class);
-//            configuration.addAnnotatedClass(Room.class);
-//            configuration.addAnnotatedClass(Schedule.class);
-//            configuration.addAnnotatedClass(Seat.class);
-//            configuration.addAnnotatedClass(Ticket.class);
-//            configuration.addAnnotatedClass(TicketCategory.class);
+            configuration.addAnnotatedClass(Customer.class);
+            configuration.addAnnotatedClass(Employee.class);
+            configuration.addAnnotatedClass(Office.class);
+            configuration.addAnnotatedClass(Order.class);
+            configuration.addAnnotatedClass(OrderProduct.class);
+            configuration.addAnnotatedClass(Payment.class);
+            configuration.addAnnotatedClass(Product.class);
+            configuration.addAnnotatedClass(ProductLine.class);
 
 
             ServiceRegistry serviceRegistry =
