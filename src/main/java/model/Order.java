@@ -1,9 +1,11 @@
 package model;
 
 import lombok.*;
+import org.hibernate.type.descriptor.java.LocalDateTimeJavaDescriptor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,14 +17,13 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customerId")
     private Integer orderId;
 
-    private LocalDate orderDate;
+    private LocalDateTime orderDate;
 
-    private LocalDate requiredDate;
+    private LocalDateTime requiredDate;
 
-    private LocalDate shippedDate;
+    private LocalDateTime shippedDate;
 
     private String status;
 
@@ -32,11 +33,11 @@ public class Order {
     @EqualsAndHashCode.Exclude
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="customerId")
-    private Customer costumer;
+    private Customer customer;
 
 
 

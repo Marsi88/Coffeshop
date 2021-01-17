@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,14 +18,14 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer checknum;
 
-    private LocalDate paymentDate;
+    private String paymentDate;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="customerId")
-    private Customer costumer;
+    private Customer customer;
 
 
 

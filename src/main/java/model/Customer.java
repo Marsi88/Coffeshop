@@ -39,7 +39,7 @@ public class Customer {
     @EqualsAndHashCode.Exclude
     private Set<Payment> payments = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="employeeID")

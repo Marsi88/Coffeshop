@@ -37,13 +37,13 @@ public class Employee {
     private Set<Customer> customers = new HashSet<>();
 
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="officecode")
     private Office office;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="managerId")

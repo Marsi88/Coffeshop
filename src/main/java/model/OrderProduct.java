@@ -19,13 +19,13 @@ public class OrderProduct {
 
     private Integer price;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="productId")
     private Product product;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="orderId")

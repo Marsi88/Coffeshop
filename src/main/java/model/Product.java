@@ -10,7 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "products")
 @Data
-
 public class Product {
 
     @Id
@@ -27,10 +26,10 @@ public class Product {
 
     private Integer  sellPrice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JoinColumn(name="idProductLine")
+    @JoinColumn(name="productLineId")
     private ProductLine productLine;
 
     @OneToMany(mappedBy = "product")

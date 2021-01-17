@@ -7,8 +7,8 @@ public class CoffeeShopApplication {
 
      Session session = HibernateUtils.getSessionFactory().openSession();
 
-         session = HibernateUtils.getSessionFactory().openSession();
-        session.createQuery("FROM Product p").getResultList().forEach(System.out::println);
+        session = HibernateUtils.getSessionFactory().openSession();
+        session.createQuery("FROM Product").getResultList().forEach(System.out::println);
 
     }
 }
