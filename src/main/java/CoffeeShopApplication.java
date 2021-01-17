@@ -1,4 +1,6 @@
+import model.Employee;
 import org.hibernate.Session;
+import repository.EmployeeRepository;
 import util.HibernateUtils;
 
 import java.util.Scanner;
@@ -12,9 +14,19 @@ public class CoffeeShopApplication {
         session.createQuery("FROM Product").getResultList().forEach(System.out::println);
 
         System.out.println("WELCOME TO OUR COFFEESHOP MAGAZINE");
-        System.out.println(" Press 1 to Log in or 2. to quit ");
-        String identifyPerson = scanner.nextLine();
+        System.out.println(" Log in or quit ");
 
+        String username = scanner.nextLine();
+        String password = scanner.nextLine();
+        Employee employee = EmployeeRepository.login(username, password);
+
+        if (employee == null) {
+            System.out.println("Provo perseri");
+        } else if (employee.getRole().equalsIgnoreCase("admin")) {
+            System.out.println("Show admin menu");
+        } else if (employee.getRole().equalsIgnoreCase( "sales")) {
+            System.out.println("show sale menu");
+        }
 
     }
 }

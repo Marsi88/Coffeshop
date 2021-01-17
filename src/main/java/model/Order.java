@@ -1,10 +1,7 @@
 package model;
 
 import lombok.*;
-import org.hibernate.type.descriptor.java.LocalDateTimeJavaDescriptor;
-
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
