@@ -5,19 +5,33 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import util.HibernateUtils;
 
+import java.util.List;
+
 public class EmployeeRepository {
 
-    public static Employee login (String user, String password) {
-        try{
-            Session session = HibernateUtils.getSessionFactory().openSession();
-            Query query = session.createQuery("from Employee e where e.user =:username and e.password=:password");
-            query.setParameter("username", user);
-            query.setParameter("password", password);
-            return (Employee) query.getSingleResult();
-        }catch (Exception e){
-            return null;
+
+
+
+    public Employee login(String username, String password){
+        Session session = HibernateUtils.getSessionFactory().openSession();
+
+        Query query = session.createQuery("from Employee e where e.user = :usersname and e.password = :password");
+
+        query.setParameter("usersname", username);
+
+        query.setParameter("password", password);
+
+        Employee employee = null;
+
+        List<Employee> employees = query.getResultList();
+
+        if(!employees.isEmpty()){
+            employee = employees.get(0);
         }
 
+        session.close();
+
+        return employee;
     }
 
 }

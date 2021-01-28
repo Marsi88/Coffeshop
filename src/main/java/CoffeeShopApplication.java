@@ -1,38 +1,44 @@
-import model.Employee;
-import org.hibernate.Session;
-import repository.EmployeeRepository;
+import controller.EmployeeController;
 import util.HibernateUtils;
+import util.ScannerExt;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
+import static repository.Colors.*;
+
 public class CoffeeShopApplication {
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Session session = HibernateUtils.getSessionFactory().openSession();
+        //init hibernate
+        HibernateUtils.getSessionFactory();
 
-        session = HibernateUtils.getSessionFactory().openSession();
-        session.createQuery("FROM Product").getResultList().forEach(System.out::println);
+        ScannerExt scannerExt = new ScannerExt(new Scanner(System.in));
 
-        System.out.println("WELCOME TO OUR COFFEESHOP MAGAZINE");
-        System.out.println(" Log in or quit ");
-        Boolean invalid = true;
-        do {
-            System.out.println("enter username");
-            String username = scanner.nextLine();
-            System.out.println("enter password");
-            String password = scanner.nextLine();
-            Employee employee = EmployeeRepository.login(username, password);
+        boolean quit = true;
 
-            if (employee == null) {
-                System.out.println("Provo perseri");
-            } else if (employee.getRole().equalsIgnoreCase("admin")) {
-                System.out.println("Show admin menu");
-                invalid = false;
-            } else if (employee.getRole().equalsIgnoreCase("sales")) {
-                System.out.println("show sale menu");
-                invalid = false;
+        while (quit) {
+            System.out.println(ANSI_YELLOW + "Miresevini ne CoffeeShop Magazine");
+            System.out.println(ANSI_CYAN + "Zgjidhni nje nga opsionet me poshte!");
+            System.out.println(ANSI_GREEN + "1.Login");
+            System.out.println(ANSI_RED + "0.Quit");
+
+            Integer choice = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1));
+
+            switch (choice) {
+                case 0:
+                    quit = false;
+                    break;
+                case 1:
+                    EmployeeController employeeController = new EmployeeController(scannerExt);
+                    employeeController.login();
+                    break;
+                default:
+                    break;
             }
+        }
 
-        } while (invalid);
+        scannerExt.close();
+        System.exit(0);
     }
 }

@@ -1,6 +1,9 @@
 package model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,9 +27,11 @@ public class Product {
 
     private Integer  sellPrice;
 
+    private Integer  isActive;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @JoinColumn(name="productLineId")
     private ProductLine productLine;
 

@@ -1,5 +1,9 @@
 package model;
-import lombok.*;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,12 +42,11 @@ public class Customer {
     @EqualsAndHashCode.Exclude
     private Set<Payment> payments = new HashSet<>();
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JoinColumn(name="employeeID")
+    @JoinColumn(name = "employeeID")
     private Employee employee;
-
 
 
 }

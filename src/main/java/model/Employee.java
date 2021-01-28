@@ -1,6 +1,9 @@
 package model;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +32,8 @@ public class Employee {
 
     private String password;
 
+    private Integer isworking;
+
 
     @OneToMany(mappedBy = "employee")
     @ToString.Exclude
@@ -36,16 +41,12 @@ public class Employee {
     private Set<Customer> customers = new HashSet<>();
 
 
-    @ManyToOne (fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @JoinColumn(name="officecode")
-    private Office office;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JoinColumn(name="managerId")
+    @JoinColumn(name = "managerId")
     private Employee employee;
 
     @OneToMany(mappedBy = "employee")
@@ -53,7 +54,4 @@ public class Employee {
     @EqualsAndHashCode.Exclude
     private Set<Employee> employees = new HashSet<>();
 
-
-
-
-}
+    }
