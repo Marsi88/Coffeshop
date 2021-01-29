@@ -32,6 +32,8 @@ public class Customer {
 
     private String country;
 
+    private Integer isActive;
+
     @OneToMany(mappedBy = "customer")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -47,6 +49,5 @@ public class Customer {
     @EqualsAndHashCode.Exclude
     @JoinColumn(name = "employeeID")
     private Employee employee;
-
 
 }
