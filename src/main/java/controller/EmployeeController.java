@@ -18,7 +18,7 @@ import static repository.Colors.*;
 
 public class EmployeeController {
 
-    private final ScannerExt scannerExt;
+    private final ScannerExt scannerExt ;
 
     private EmployeeRepository employeeRepository;
 
@@ -49,6 +49,11 @@ public class EmployeeController {
             String password = this.scannerExt.scanField();
 
             Employee employee = this.employeeRepository.login(username, password);
+
+
+            employee.getEmployeeID();
+            System.out.println(employee.getEmployeeID());
+
             if (Objects.isNull(employee)) {
                 System.out.println("Login i gabuar. Provo perseri");
             } else {
@@ -59,7 +64,8 @@ public class EmployeeController {
                     showAdminMenu();
                 } else {
                     System.out.println("Opsionet e Sales!");
-                    showOperatorMenu();
+               SalesController salesController=new SalesController(this.scannerExt);
+               salesController.showSalesMenu();
                 }
             }
         }
@@ -101,36 +107,6 @@ public class EmployeeController {
     }
 
 
-    public void showOperatorMenu() {
-        boolean logout = true;
-        while (logout) {
-            System.out.println(ANSI_YELLOW_BACKGROUND + "Zgjidhni nje nga opsionet me poshte!");
-            System.out.println("1.Porosite e mia!");
-            System.out.println("2.Shto Klient!");
-            System.out.println("3.Shiko Klientet!");
-            System.out.println("4.Logout!");
-
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
-            OrderController orderController = new OrderController(scannerExt);
-            switch (choise) {
-                case 1:
-                    orderController.showMyOrders();
-                    break;
-                case 2:
-                    orderController.addOrder();
-                    break;
-                case 3:
-
-
-                    break;
-                case 4:
-                    logout = false;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 
 
     public void ManageEmployees() {
