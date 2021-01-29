@@ -106,6 +106,7 @@ public class EmployeeController {
         while (logout) {
             System.out.println(ANSI_YELLOW_BACKGROUND + "Zgjidhni nje nga opsionet me poshte!");
             System.out.println("1.Porosite e mia!");
+
             System.out.println("2.Shto Klient!");
             System.out.println("3.Shiko Klientet!");
             System.out.println("4.Logout!");
