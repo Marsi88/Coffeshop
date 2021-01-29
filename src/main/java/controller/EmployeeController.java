@@ -7,11 +7,9 @@ import org.hibernate.query.Query;
 import repository.EmployeeRepository;
 import util.HibernateUtils;
 import util.ScannerExt;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
 import static repository.Colors.*;
 
 public class EmployeeController {

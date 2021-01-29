@@ -1,7 +1,6 @@
 package controller;
 
 import model.Customer;
-import model.Employee;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -107,11 +106,8 @@ public class SalesController {
 
     public void listClient() {
         System.out.println("Lista e klienteve !");
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c where c.isActive=1");
-        List<Customer> customers = query.getResultList();
-        customers.forEach(System.out::println);
-        session.close();
+        salesRepository.listClient();
+
     }
 
     public void addClient() {
@@ -130,18 +126,6 @@ public class SalesController {
         System.out.println("Shteti");
         String country = this.scannerExt.scanField();
 
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c");
-
-//        query.setParameter("usersname", username);
-//        List<Employee> employees = query.getResultList();
-//        if (!employees.isEmpty())
-//            System.out.println("user taken try another");
-//        username = scannerExt.scanField();
-//
-//        System.out.println("Te vendosi passwordin");
-//        String password = this.scannerExt.scanField();
-
         Customer customer = new Customer();
         EmployeeController employeeController = new EmployeeController(scannerExt);
         employeeController.setCurrentEmployee();
@@ -153,18 +137,11 @@ public class SalesController {
         customer.setAddress(address);
         customer.setCity(city);
         customer.setCountry(country);
-        Transaction transaction = session.beginTransaction();
-        session.save(customer);
-        transaction.commit();
-        System.out.println("Klienti u shtua");
-        session.close();
+        salesRepository.addClient(customer);
     }
 
     public void editClient() {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c ");
-        List<Customer> customers = query.getResultList();
-        customers.forEach(System.out::println);
+        salesRepository.editClient();
 
         boolean back = true;
         while (back) {
@@ -182,103 +159,31 @@ public class SalesController {
 
             switch (choise) {
                 case 1:
-                    Transaction transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    Integer scanCustomerId = scannerExt.scanNumberField();
-                    Customer customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani emrin e ri");
-                    String editName = scannerExt.scanField();
-                    customer.setFirstName(editName);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                   salesRepository.editName(scannerExt);
                     break;
 
                 case 2:
-                    transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    scanCustomerId = scannerExt.scanNumberField();
-                    customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani mbiemrin e ri");
-                    String editSurname = scannerExt.scanField();
-                    customer.setLastName(editSurname);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                    salesRepository.editLastname(scannerExt);
                     break;
 
                 case 3:
-                    transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    scanCustomerId = scannerExt.scanNumberField();
-                    customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani emailin e ri");
-                    String editEmail = scannerExt.scanField();
-                    customer.setEmail(editEmail);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                    salesRepository.editEmail(scannerExt);
                     break;
 
                 case 4:
-                    transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    scanCustomerId = scannerExt.scanNumberField();
-                    customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani numrin e ri");
-                    Integer editphone = Integer.valueOf(scannerExt.scanField());
-                    customer.setPhone(editphone);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                    salesRepository.editPhone(scannerExt);
                     break;
 
                 case 5:
-                    transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    scanCustomerId = scannerExt.scanNumberField();
-                    customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani adresen e re");
-                    String editAddress = scannerExt.scanField();
-                    customer.setAddress(editAddress);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                    salesRepository.editAddress(scannerExt);
                     break;
 
                 case 6:
-                    session = HibernateUtils.getSessionFactory().openSession();
-                    transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    scanCustomerId = scannerExt.scanNumberField();
-                    customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani qytetin e ri");
-                    String editCity = scannerExt.scanField();
-                    customer.setCity(editCity);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                    salesRepository.editCity(scannerExt);
                     break;
 
                 case 7:
-                    session = HibernateUtils.getSessionFactory().openSession();
-                    transaction = session.beginTransaction();
-                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-                    scanCustomerId = scannerExt.scanNumberField();
-                    customer = session.find(Customer.class, scanCustomerId);
-                    System.out.println("Shkruani shtetin e ri");
-                    String editCountry = scannerExt.scanField();
-                    customer.setCountry(editCountry);
-                    session.update(customer);
-                    transaction.commit();
-                    System.out.println("Klienti u modifikua");
-                    session.close();
+                    salesRepository.editCountry(scannerExt);
                     break;
                 case 8:
                     back = false;
@@ -286,20 +191,8 @@ public class SalesController {
             }
         }
     }
-
     public void removeClient() {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        Query query = session.createQuery("select c from Customer c");
-        query.stream().forEach(System.out::println);
-        System.out.println("Zgjidhni id per te fshire nje klient");
-        Integer scanCustomerId = scannerExt.scanNumberField();
-        Customer customer = session.find(Customer.class, scanCustomerId);
-        session.update(customer);
-        customer.setIsActive(2);
-        transaction.commit();
-        System.out.println("Klienti u fshi");
-        session.close();
+        salesRepository.removeClient(scannerExt);
     }
 }
 
