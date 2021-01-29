@@ -1,8 +1,6 @@
 package controller;
 
 import model.Employee;
-import model.Product;
-import model.ProductLine;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -49,6 +47,8 @@ public class EmployeeController {
             String password = this.scannerExt.scanField();
 
             Employee employee = this.employeeRepository.login(username, password);
+            System.out.println(employee.getEmployeeID());
+
             if (Objects.isNull(employee)) {
                 System.out.println("Login i gabuar. Provo perseri");
             } else {
@@ -59,10 +59,17 @@ public class EmployeeController {
                     showAdminMenu();
                 } else {
                     System.out.println("Opsionet e Sales!");
-                    showOperatorMenu();
+                    SalesController salesController = new SalesController(this.scannerExt);
+                    salesController.showSalesMenu();
                 }
             }
         }
+    }
+
+    public Employee setCurrentEmployee() {
+        employeeRepository.login(getCurrentEmployee().getUser(), getCurrentEmployee().getPassword());
+        getCurrentEmployee().getEmployeeID();
+        return getCurrentEmployee();
     }
 
     public void showAdminMenu() {
@@ -98,38 +105,6 @@ public class EmployeeController {
         System.out.println(ANSI_CYAN + "1.Menaxho Punonjesit");
         System.out.println(ANSI_BLUE + "2.Menaxho  Shitjet");
         System.out.println(ANSI_RED + "3.Logout !");
-    }
-
-
-    public void showOperatorMenu() {
-        boolean logout = true;
-        while (logout) {
-            System.out.println(ANSI_YELLOW_BACKGROUND + "Zgjidhni nje nga opsionet me poshte!");
-            System.out.println("1.Porosite e mia!");
-            System.out.println("2.Shto Klient!");
-            System.out.println("3.Shiko Klientet!");
-            System.out.println("4.Logout!");
-
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
-            OrderController orderController = new OrderController(scannerExt);
-            switch (choise) {
-                case 1:
-                    orderController.showMyOrders();
-                    break;
-                case 2:
-                    orderController.addOrder();
-                    break;
-                case 3:
-
-
-                    break;
-                case 4:
-                    logout = false;
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
 
