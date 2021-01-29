@@ -1,8 +1,6 @@
 package controller;
 
 import model.Employee;
-import model.Product;
-import model.ProductLine;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -18,7 +16,7 @@ import static repository.Colors.*;
 
 public class EmployeeController {
 
-    private final ScannerExt scannerExt ;
+    private final ScannerExt scannerExt;
 
     private EmployeeRepository employeeRepository;
 
@@ -49,9 +47,6 @@ public class EmployeeController {
             String password = this.scannerExt.scanField();
 
             Employee employee = this.employeeRepository.login(username, password);
-
-
-            employee.getEmployeeID();
             System.out.println(employee.getEmployeeID());
 
             if (Objects.isNull(employee)) {
@@ -64,11 +59,17 @@ public class EmployeeController {
                     showAdminMenu();
                 } else {
                     System.out.println("Opsionet e Sales!");
-               SalesController salesController=new SalesController(this.scannerExt);
-               salesController.showSalesMenu();
+                    SalesController salesController = new SalesController(this.scannerExt);
+                    salesController.showSalesMenu();
                 }
             }
         }
+    }
+
+    public Employee setCurrentEmployee() {
+        employeeRepository.login(getCurrentEmployee().getUser(), getCurrentEmployee().getPassword());
+        getCurrentEmployee().getEmployeeID();
+        return getCurrentEmployee();
     }
 
     public void showAdminMenu() {
@@ -105,8 +106,6 @@ public class EmployeeController {
         System.out.println(ANSI_BLUE + "2.Menaxho  Shitjet");
         System.out.println(ANSI_RED + "3.Logout !");
     }
-
-
 
 
     public void ManageEmployees() {

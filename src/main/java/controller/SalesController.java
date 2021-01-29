@@ -1,4 +1,5 @@
 package controller;
+
 import model.Customer;
 import model.Employee;
 import org.hibernate.Session;
@@ -7,8 +8,10 @@ import org.hibernate.query.Query;
 import repository.SalesRepository;
 import util.HibernateUtils;
 import util.ScannerExt;
+
 import java.util.Arrays;
 import java.util.List;
+
 import static repository.Colors.ANSI_YELLOW_BACKGROUND;
 
 
@@ -24,6 +27,7 @@ public class SalesController {
         this.scannerExt = scannerExt;
         this.salesRepository = new SalesRepository();
     }
+
     public static Customer getCurrentCustomer() {
         return currentCustomer;
     }
@@ -46,7 +50,8 @@ public class SalesController {
 //                case 2:
 //                    orderController.addOrder();
 //                    break;
-                case 2: salesController.ManageClient();
+                case 2:
+                    salesController.ManageClient();
                     break;
 
                 case 3:
@@ -57,6 +62,7 @@ public class SalesController {
             }
         }
     }
+
     private void soutClientOptions(String s, String s2, String s3, String s4, String s5, String s6) {
         System.out.println(s);
         System.out.println(s2);
@@ -65,6 +71,7 @@ public class SalesController {
         System.out.println(s5);
         System.out.println(s6);
     }
+
     public void ManageClient() {
         boolean back = true;
         while (back) {
@@ -108,10 +115,6 @@ public class SalesController {
     }
 
     public void addClient() {
-//        Employee employee=new Employee();
-//        employee.getEmployeeID();
-////        System.out.println("Vendosni Id e punonjesit qe po e shton kete Klient");
-//        Integer ID = Integer.valueOf(employee.getEmployeeID());
         System.out.println("Vendosni emrin e klientit");
         String name = this.scannerExt.scanField();
         System.out.println("Vendosni mbiemrin e klientit");
@@ -119,7 +122,7 @@ public class SalesController {
         System.out.println("Vendosni emailin e klientit");
         String email = this.scannerExt.scanField();
         System.out.println("Numri i kontaktit");
-        Integer phone = Integer.valueOf(this.scannerExt.scanField());
+        Integer phone = scannerExt.scanNumberField();
         System.out.println("Adresa");
         String address = this.scannerExt.scanField();
         System.out.println("Qyteti");
@@ -148,6 +151,9 @@ public class SalesController {
         customer.setAddress(address);
         customer.setCity(city);
         customer.setCountry(country);
+        EmployeeController employeeController = new EmployeeController(scannerExt);
+        employeeController.setCurrentEmployee();
+        customer.setEmployee(employeeController.setCurrentEmployee());
         Transaction transaction = session.beginTransaction();
         session.save(customer);
         transaction.commit();
@@ -173,7 +179,7 @@ public class SalesController {
                     "\n7 Shtetin" +
                     "\n8 back");
 
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5, 6, 7,8));
+            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
 
             switch (choise) {
                 case 1:

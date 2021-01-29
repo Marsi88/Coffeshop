@@ -18,8 +18,6 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer customerID;
 
-//    private Integer employeeID;
-
     private String firstName;
 
     private String lastName;
