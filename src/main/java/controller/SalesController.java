@@ -108,7 +108,7 @@ public class SalesController {
     public void listClient() {
         System.out.println("Lista e klienteve !");
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c");
+        Query query = session.createQuery("select c from Customer c where c.isActive=1");
         List<Customer> customers = query.getResultList();
         customers.forEach(System.out::println);
         session.close();
@@ -143,7 +143,9 @@ public class SalesController {
 //        String password = this.scannerExt.scanField();
 
         Customer customer = new Customer();
-//        customer.setEmployeeID(ID);
+        EmployeeController employeeController = new EmployeeController(scannerExt);
+        employeeController.setCurrentEmployee();
+        customer.setEmployee(employeeController.setCurrentEmployee());
         customer.setFirstName(name);
         customer.setLastName(lastname);
         customer.setEmail(email);
@@ -151,9 +153,6 @@ public class SalesController {
         customer.setAddress(address);
         customer.setCity(city);
         customer.setCountry(country);
-        EmployeeController employeeController = new EmployeeController(scannerExt);
-        employeeController.setCurrentEmployee();
-        customer.setEmployee(employeeController.setCurrentEmployee());
         Transaction transaction = session.beginTransaction();
         session.save(customer);
         transaction.commit();
@@ -296,7 +295,8 @@ public class SalesController {
         System.out.println("Zgjidhni id per te fshire nje klient");
         Integer scanCustomerId = scannerExt.scanNumberField();
         Customer customer = session.find(Customer.class, scanCustomerId);
-        session.delete(customer);
+        session.update(customer);
+        customer.setIsActive(2);
         transaction.commit();
         System.out.println("Klienti u fshi");
         session.close();

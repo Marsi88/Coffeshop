@@ -32,6 +32,8 @@ public class Customer {
 
     private String country;
 
+    private Integer isActive;
+
     @OneToMany(mappedBy = "customer")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
