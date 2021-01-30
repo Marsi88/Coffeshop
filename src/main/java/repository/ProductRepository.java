@@ -9,17 +9,38 @@ import util.HibernateUtils;
 import util.ScannerExt;
 
 import java.util.List;
+import java.util.Optional;
 
-public class ProductRepository {
+public class ProductRepository implements  Repository<Product>{
 
+    @Override
+    public List<Product> list() {
+        return null;
+    }
 
-    public void addProduct(Product product) {
+    @Override
+    public Optional<Product> findById(Integer id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void save(Product product) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         session.save(product);
         transaction.commit();
         System.out.println("produkti u shtua");
         session.close();
+    }
+
+    @Override
+    public void update(Product product) {
+
+    }
+
+    @Override
+    public void delete(Product product) {
+
     }
 
 

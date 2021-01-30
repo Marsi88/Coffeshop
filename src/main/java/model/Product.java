@@ -27,7 +27,7 @@ public class Product {
 
     private Integer  sellPrice;
 
-    private Integer  isActive;
+    private Integer  isActive=1;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -85,7 +85,7 @@ public class EmployeeController {
                     break;
                 case 2:
                     ProductsController productsController = new ProductsController(scannerExt);
-                    productsController.ManageProducts();
+                    productsController.manageProducts();
 
 //                case 2: {
 //                    TableController tableController = new TableController(scannerExt);
