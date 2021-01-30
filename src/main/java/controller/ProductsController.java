@@ -80,7 +80,7 @@ public class ProductsController {
         System.out.println("Vendosni emrin e produktit e ri");
         String productName = this.scannerExt.scanField();
         System.out.println("Sa kg per pako/thes do ket produkti ri?");
-        Integer scaleProduct = this.scannerExt.scanNumberField();
+        String scaleProduct = this.scannerExt.scanField();
         System.out.println("Vendos nje pershkrim te shkurter mbi produktin e ri");
         String descriptionProduct = this.scannerExt.scanField();
         System.out.println("Sa sasi do ka ne stok?");

@@ -28,6 +28,9 @@ public class Order {
 
     private String status;
 
+    private Integer isActive;
+
+
 
     @OneToMany(mappedBy = "order")
     @ToString.Exclude

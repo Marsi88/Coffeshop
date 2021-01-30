@@ -19,7 +19,7 @@ public class Product {
 
     private String name;
 
-    private Integer  scale;
+    private String  scale;
 
     private String productDescription;
 
