@@ -145,7 +145,8 @@ public class ProductRepository {
        Integer scanProductId = scannerExt.scanNumberField();
      Product   product = session.find(Product.class, scanProductId);
         System.out.println("enter new scale number  for the product per package");
-        String  editScale = scannerExt.scanField();
+              String  editScale = scannerExt.scanField();
+
         product.setScale(editScale);
         session.update(product);
         transaction.commit();

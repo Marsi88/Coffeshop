@@ -7,9 +7,12 @@ import org.hibernate.query.Query;
 import repository.EmployeeRepository;
 import util.HibernateUtils;
 import util.ScannerExt;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
 import static repository.Colors.*;
 
 public class EmployeeController {
@@ -22,7 +25,7 @@ public class EmployeeController {
 
     public EmployeeController(ScannerExt scannerExt) {
         this.scannerExt = scannerExt;
-        this.employeeRepository = new EmployeeRepository();
+        this.employeeRepository = new EmployeeRepository(scannerExt);
     }
 
     public static Employee getCurrentEmployee() {
@@ -104,7 +107,6 @@ public class EmployeeController {
         System.out.println(ANSI_BLUE + "2.Menaxho  Shitjet");
         System.out.println(ANSI_RED + "3.Logout !");
     }
-
 
 
     public void ManageEmployees() {
@@ -200,11 +202,7 @@ public class EmployeeController {
     }
 
     public void editEmployee() {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select e from Employee e ");
-        List<Employee> employees = query.getResultList();
-        employees.forEach(System.out::println);
-
+        employeeRepository.editEmployees();
         boolean back = true;
         while (back) {
             System.out.println("\nWhat you want to edit?" +
@@ -220,87 +218,53 @@ public class EmployeeController {
 
             switch (choise) {
                 case 1:
-                    Transaction transaction = session.beginTransaction();
                     System.out.println("Select an id to edit a punonjes");
                     Integer scanEmployeeId = scannerExt.scanNumberField();
-                    Employee employee = session.find(Employee.class, scanEmployeeId);
                     System.out.println("enter new name");
                     String editName = scannerExt.scanField();
-                    employee.setFirstName(editName);
-                    session.update(employee);
-                    transaction.commit();
-                    session.close();
+                    employeeRepository.editName(scanEmployeeId, editName);
+
                     break;
 
                 case 2:
-                    transaction = session.beginTransaction();
+
                     System.out.println("Select an id to edit a punonjes");
                     scanEmployeeId = scannerExt.scanNumberField();
-                    employee = session.find(Employee.class, scanEmployeeId);
                     System.out.println("enter new surname");
                     String editSurname = scannerExt.scanField();
-                    employee.setLastName(editSurname);
-                    session.update(employee);
-                    transaction.commit();
-                    session.close();
+                    employeeRepository.editSurname(scanEmployeeId, editSurname);
                     break;
                 case 3:
-                    transaction = session.beginTransaction();
+
                     System.out.println("Select an id to edit a punonjes");
                     scanEmployeeId = scannerExt.scanNumberField();
-                    employee = session.find(Employee.class, scanEmployeeId);
                     System.out.println("enter new Email");
                     String editEmail = scannerExt.scanField();
-                    employee.setEmail(editEmail);
-                    session.update(employee);
-                    transaction.commit();
-                    session.close();
+                    employeeRepository.editEmail(scanEmployeeId, editEmail);
 
                     break;
                 case 4:
-                    transaction = session.beginTransaction();
-                    System.out.println("Select an id to edit a punonjes");
-                    scanEmployeeId = scannerExt.scanNumberField();
-                    employee = session.find(Employee.class, scanEmployeeId);
-                    System.out.println("enter new username");
-                    String editUsername = scannerExt.scanField();
-                    query = session.createQuery("select e.user from Employee e where e.user = :usersname");
-                    query.setParameter("usersname", editUsername);
-                    List<Employee> employees2 = query.getResultList();
-                    if (!employees2.isEmpty())
-                        System.out.println("user taken try another");
-                    editUsername = scannerExt.scanField();
-                    employee.setUser(editUsername);
-                    session.update(employee);
-                    transaction.commit();
-                    session.close();
 
+                    employeeRepository.editUserName();
 
+                    break;
                 case 5:
-                    transaction = session.beginTransaction();
+
                     System.out.println("Select an id to edit a punonjes");
                     scanEmployeeId = scannerExt.scanNumberField();
-                    employee = session.find(Employee.class, scanEmployeeId);
+
                     System.out.println("enter new Password");
                     String editPassword = scannerExt.scanField();
-                    employee.setPassword(editPassword);
-                    session.update(employee);
-                    transaction.commit();
-                    session.close();
+                    employeeRepository.editPassword(scanEmployeeId, editPassword);
                     break;
 
                 case 6:
-                    session = HibernateUtils.getSessionFactory().openSession();
-                    transaction = session.beginTransaction();
+
                     System.out.println("Select an id to return back to work");
                     scanEmployeeId = scannerExt.scanNumberField();
-                    employee = session.find(Employee.class, scanEmployeeId);
-                    employee.setIsworking(1);
-                    session.update(employee);
-                    transaction.commit();
+                    employeeRepository.returnToWork(scanEmployeeId);
                     System.out.println("Employee has returned to work");
 
-                    session.close();
                     break;
                 case 7:
                     back = false;
@@ -317,6 +281,8 @@ public class EmployeeController {
         Query query = session.createQuery("select e from Employee e");
         query.stream().forEach(System.out::println);
         System.out.println("Select an id to delete a punonjes");
+        EmployeeRepository employeeRepository=new EmployeeRepository(scannerExt);
+        employeeRepository.getEmployeeIdNumbers();
         Integer scanEmployeeId = scannerExt.scanNumberField();
         Employee employee = session.find(Employee.class, scanEmployeeId);
         employee.setIsworking(2);
