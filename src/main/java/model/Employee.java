@@ -32,15 +32,13 @@ public class Employee {
 
     private String password;
 
-    private Integer isworking;
+    private Integer isworking = 1;
 
 
     @OneToMany(mappedBy = "employee")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Customer> customers = new HashSet<>();
-
-
 
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,4 +52,13 @@ public class Employee {
     @EqualsAndHashCode.Exclude
     private Set<Employee> employees = new HashSet<>();
 
+    public String printToConsole() {
+        return "Emri: " + this.firstName
+                + "\n Mbiemri: " + this.lastName
+                + "\n Email :" + this.email
+                + "\n Pozicioni punes : " + this.jobTitle
+                + "\n Username : " + this.user;
     }
+
+
+}

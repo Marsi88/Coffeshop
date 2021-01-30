@@ -8,8 +8,9 @@ import util.HibernateUtils;
 import util.ScannerExt;
 
 import java.util.List;
+import java.util.Optional;
 
-public class EmployeeRepository {
+public class EmployeeRepository implements Repository<Employee> {
     private final ScannerExt scannerExt;
 
     public EmployeeRepository(ScannerExt scannerExt) {
@@ -37,15 +38,16 @@ public class EmployeeRepository {
 
         return employee;
     }
+
     public void editUserName() {
-Session session=HibernateUtils.getSessionFactory().openSession();
-       Transaction transaction = session.beginTransaction();
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
         System.out.println("Select an id to edit a punonjes");
-      Integer  scanEmployeeId = scannerExt.scanNumberField();
-      Employee  employee = session.find(Employee.class, scanEmployeeId);
+        Integer scanEmployeeId = scannerExt.scanNumberField();
+        Employee employee = session.find(Employee.class, scanEmployeeId);
         System.out.println("enter new username");
         String editUsername = scannerExt.scanField();
-     Query   query = session.createQuery("select e.user from Employee e where e.user = :usersname");
+        Query query = session.createQuery("select e.user from Employee e where e.user = :usersname");
         query.setParameter("usersname", editUsername);
         List<Employee> employees2 = query.getResultList();
         if (!employees2.isEmpty())
@@ -55,9 +57,6 @@ Session session=HibernateUtils.getSessionFactory().openSession();
         session.update(employee);
         transaction.commit();
         session.close();
-
-
-
     }
 
     public void editEmployees() {
@@ -68,8 +67,8 @@ Session session=HibernateUtils.getSessionFactory().openSession();
 
     }
 
-    public void editName(Integer scanEmployeeId,String editName) {
-        Session session=HibernateUtils.getSessionFactory().openSession();
+    public void editName(Integer scanEmployeeId, String editName) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
         Employee employee = session.find(Employee.class, scanEmployeeId);
         employee.setFirstName(editName);
@@ -78,31 +77,30 @@ Session session=HibernateUtils.getSessionFactory().openSession();
         session.close();
     }
 
-    public void editSurname(Integer scanEmployeeId,String editSurname) {
-        Session session=HibernateUtils.getSessionFactory().openSession();
-        Transaction   transaction = session.beginTransaction();
-     Employee   employee = session.find(Employee.class, scanEmployeeId);
+    public void editSurname(Integer scanEmployeeId, String editSurname) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        Employee employee = session.find(Employee.class, scanEmployeeId);
         employee.setLastName(editSurname);
         session.update(employee);
         transaction.commit();
         session.close();
     }
 
-    public void editEmail(Integer scanEmployeeId,String editEmail) {
+    public void editEmail(Integer scanEmployeeId, String editEmail) {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction  transaction = session.beginTransaction();
-        Employee  employee = session.find(Employee.class, scanEmployeeId);
+        Transaction transaction = session.beginTransaction();
+        Employee employee = session.find(Employee.class, scanEmployeeId);
         employee.setEmail(editEmail);
         session.update(employee);
         transaction.commit();
         session.close();
-
     }
 
-    public void editPassword(Integer scanEmployeeId,String editPassword) {
-        Session session=HibernateUtils.getSessionFactory().openSession();
-        Transaction   transaction = session.beginTransaction();
-        Employee    employee = session.find(Employee.class, scanEmployeeId);
+    public void editPassword(Integer scanEmployeeId, String editPassword) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        Employee employee = session.find(Employee.class, scanEmployeeId);
         employee.setPassword(editPassword);
         session.update(employee);
         transaction.commit();
@@ -110,22 +108,79 @@ Session session=HibernateUtils.getSessionFactory().openSession();
     }
 
     public void returnToWork(Integer scanEmployeeId) {
-        Session session=HibernateUtils.getSessionFactory().openSession();
+        Session session = HibernateUtils.getSessionFactory().openSession();
         session = HibernateUtils.getSessionFactory().openSession();
-        Transaction  transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
         Employee employee = session.find(Employee.class, scanEmployeeId);
         employee.setIsworking(1);
         session.update(employee);
         transaction.commit();
         session.close();
-
     }
-    public List<Employee> getEmployeeIdNumbers(){
-        Session session=HibernateUtils.getSessionFactory().openSession();
-        Query query=session.createQuery("SELECT employee.employeeID from Employee e");
-        List<Employee>employees=query.getResultList();
 
-
+    public List<Employee> getEmployeeIdNumbers() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Query query = session.createQuery("SELECT employee.employeeID from Employee e");
+        List<Employee> employees = query.getResultList();
         return employees;
+    }
+
+    @Override
+    public List<Employee> list() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Query query = session.createQuery("from Employee e where e.isworking=1");
+        List<Employee>employees=query.getResultList();
+        session.close();
+        return employees;
+    }
+
+    @Override
+    public Optional<Employee> findById(Integer id) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Query query = session.createQuery("from Employee e where e.employeeID=:id and e.isworking=1");
+        List<Employee> employees = query.getResultList();
+        if (!employees.isEmpty()) {
+            return Optional.of(employees.get(0));
+        }
+        session.close();
+        return Optional.empty();
+    }
+
+    @Override
+    public void save(Employee employee) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(employee);
+        transaction.commit();
+        session.close();
+    }
+
+    @Override
+    public void update(Employee employee) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(employee);
+        transaction.commit();
+        session.close();
+    }
+
+    @Override
+    public void delete(Employee employee) {
+        employee.setIsworking(2);
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(employee);
+        transaction.commit();
+        session.close();
+    }
+
+    public Optional<Employee> findByUsername(String username) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Query query = session.createQuery("select e from Employee e where e.user = :usersname");
+        query.setParameter("usersname", username);
+        List<Employee> employees = query.getResultList();
+        if (!employees.isEmpty())
+            return Optional.of(employees.get(0));
+        return Optional.empty();
     }
 }

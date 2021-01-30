@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static repository.Colors.*;
+import static util.Colors.*;
 
 public class EmployeeController {
 
@@ -76,12 +76,12 @@ public class EmployeeController {
     public void showAdminMenu() {
         boolean logout = true;
         while (logout) {
-            SoutEmployeeOptions();
+            soutEmployeeOptions();
             Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
 
             switch (choise) {
                 case 1:
-                    ManageEmployees();
+                    manageEmployees();
                     break;
                 case 2:
                     ProductsController productsController = new ProductsController(scannerExt);
@@ -101,7 +101,7 @@ public class EmployeeController {
         }
     }
 
-    private void SoutEmployeeOptions() {
+    private void soutEmployeeOptions() {
         System.out.println(ANSI_GREEN + "Zgjidhni nje nga opsionet me poshte!");
         System.out.println(ANSI_CYAN + "1.Menaxho Punonjesit");
         System.out.println(ANSI_BLUE + "2.Menaxho  Shitjet");
@@ -109,17 +109,16 @@ public class EmployeeController {
     }
 
 
-    public void ManageEmployees() {
+    public void manageEmployees() {
         boolean back = true;
         while (back) {
-            soutEmployeeOptions
-                    ("Zgjidhni nje nga opsionet me poshte",
-                            "1.Shto punonjes", "2.Listo punonjesi!",
-                            "3.fshi punonjes", "4. ndrysho te dhenat e punonjesit",
-                            "5.Back!");
+
+            System.out.println("Zgjidhni nje nga opsionet me poshte" +
+                    "\n1.Shto punonjes" + "\n2.Listo punonjesi!" +
+                    "\n3.Back!");
 
 
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5));
+            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
             switch (choise) {
                 case 1:
                     addEmployee();
@@ -127,14 +126,7 @@ public class EmployeeController {
                 case 2:
                     listEmployees();
                     break;
-
                 case 3:
-                    removeEmployee();
-                    break;
-                case 4:
-                    editEmployee();
-                    break;
-                case 5:
                     back = false;
                     break;
                 default:
@@ -143,62 +135,123 @@ public class EmployeeController {
         }
     }
 
-    private void soutEmployeeOptions(String s, String s2, String s3, String s4, String s5, String s6) {
-        System.out.println(s);
-        System.out.println(s2);
-        System.out.println(s3);
-        System.out.println(s4);
-        System.out.println(s5);
-        System.out.println(s6);
-    }
 
     public void listEmployees() {
         System.out.println("Lista e punonjeseve !");
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select e from Employee e where isworking=1");
-        List<Employee> employees = query.getResultList();
-        employees.forEach(System.out::println);
-        session.close();
+        List<Employee> employees = employeeRepository.list();
+        List<Integer> choises = new ArrayList<>();
+        int index = 1;
+        for (Employee e : employees) {
+            choises.add(index);
+            System.out.println(index + "." + e.getFirstName() + " " + e.getLastName());
+            index++;
+        }
+        choises.add(0);
+        System.out.println("Zgjidh nje nga punonjesit ose 0 per te shkuar mbrapa");
+        Integer choise = scannerExt.scanRestrictedFieldNumber(choises);
+        if (choise == 0) {
+            return;
+        } else {
+            boolean goback = true;
+            while (goback) {
+                System.out.println("Zgjidh nje nga opsionet" +
+                        "\n0. Shko Mbrapa" +
+                        "\n1.Shiko detajet e plota" +
+                        "\n2.edit " +
+                        "\n3.fshi");
+                Employee employee = employees.get(choise - 1);
+
+                Integer operationChoise = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1, 2, 3));
+                switch (operationChoise) {
+                    case 1:
+                        System.out.println(employee.printToConsole());
+                        break;
+                    case 2:
+                        this.editEmployee(employee);
+                        goback = false;
+                        break;
+                    case 3:
+                        this.removeEmployee(employee);
+                        goback = false;
+                        break;
+                    default:
+                        goback = false;
+                        break;
+                }
+            }
+        }
+    }
+
+    public void editEmployee(Employee employee) {
+        boolean firstEdit = true;
+        boolean isEditing = true;
+        while (isEditing) {
+            System.out.println("Zgjidh fushen" + (firstEdit ? "" : " tjeter") + " qe deshiron te ndryshosh" +
+                    "\n 0.Shko Mbrapa" +
+                    "\n 1.Emrin" +
+                    "\n 2.Mbriemrin" +
+                    "\n 3.Email");
+            Integer editChoise = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1, 2, 3));
+            switch (editChoise) {
+                case 1:
+                    System.out.println("Vendosni vleren e re");
+                    employee.setFirstName(scannerExt.scanField());
+                    break;
+                case 2:
+                    System.out.println("Vendosni vleren e re");
+                    employee.setLastName(scannerExt.scanField());
+                    break;
+                case 3:
+                    System.out.println("Vendosni vleren e re");
+                    employee.setEmail(scannerExt.scanField());
+                    break;
+                default:
+                    isEditing = false;
+                    break;
+            }
+            firstEdit = false;
+        }
+        employeeRepository.update(employee);
+    }
+
+
+    public void removeEmployee(Employee employee) {
+        employeeRepository.delete(employee);
+        System.out.println("Useri u fshi me sukses");
 
     }
 
+
     public void addEmployee() {
-        System.out.println("Vendos Emrin e punonjesit e ri ");
-        String name = this.scannerExt.scanField();
-        System.out.println("Vendosni mbiemrin");
-        String lastname = this.scannerExt.scanField();
-        System.out.println("Do jet Admin ose sales");
-        String role = this.scannerExt.scanField();
-        System.out.println("Cfare pozicioni do ket sales apo manager");
-        String jobTittle = this.scannerExt.scanField();
-        System.out.println("Te vendosi username unik:");
-        String username = this.scannerExt.scanField();
+        try {
+            Employee employee = new Employee();
 
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select e.user from Employee e where e.user = :usersname");
+            System.out.println("Vendos Emrin e punonjesit e ri ");
+            employee.setFirstName(this.scannerExt.scanField());
+            System.out.println("Vendosni mbiemrin");
+            employee.setLastName(this.scannerExt.scanField());
+            System.out.println("Do jet Admin ose sales");
+            employee.setRole(this.scannerExt.scanField());
+            employee.setJobTitle(employee.getRole().equalsIgnoreCase("admin") ? "Administrator" : "Sales");
+            boolean invalidUsername = true;
+            while (invalidUsername) {
+                System.out.println("Te vendosi username unik:");
+                String username = this.scannerExt.scanField();
+                if (employeeRepository.findByUsername(username).isPresent()) {
+                    System.out.println("Username taken try another");
+                } else {
+                    invalidUsername = false;
+                    employee.setUser(username);
+                }
+            }
+            System.out.println("Te vendosi passwordin");
+            employee.setPassword(scannerExt.scanField());
 
-        query.setParameter("usersname", username);
-        List<Employee> employees = query.getResultList();
-        if (!employees.isEmpty())
-            System.out.println("user taken try another");
-        username = scannerExt.scanField();
-
-        System.out.println("Te vendosi passwordin");
-        String password = this.scannerExt.scanField();
-
-        Employee employee = new Employee();
-        employee.setJobTitle(jobTittle);
-        employee.setRole(role);
-        employee.setFirstName(name);
-        employee.setLastName(lastname);
-        employee.setUser(username);
-        employee.setPassword(password);
-        employee.setIsworking(1);
-        Transaction transaction = session.beginTransaction();
-        session.save(employee);
-        transaction.commit();
-        System.out.println("Punonjesi u shtua");
-        session.close();
+            employeeRepository.save(employee);
+            System.out.println("Punonjesi u shtua");
+        } catch (Exception e) {
+            System.out.println("Pati nje problem provo perseri");
+        }
     }
 
     public void editEmployee() {
@@ -281,7 +334,7 @@ public class EmployeeController {
         Query query = session.createQuery("select e from Employee e");
         query.stream().forEach(System.out::println);
         System.out.println("Select an id to delete a punonjes");
-        EmployeeRepository employeeRepository=new EmployeeRepository(scannerExt);
+        EmployeeRepository employeeRepository = new EmployeeRepository(scannerExt);
         employeeRepository.getEmployeeIdNumbers();
         Integer scanEmployeeId = scannerExt.scanNumberField();
         Employee employee = session.find(Employee.class, scanEmployeeId);
@@ -289,7 +342,6 @@ public class EmployeeController {
         session.update(employee);
         transaction.commit();
         session.close();
-
     }
 
 

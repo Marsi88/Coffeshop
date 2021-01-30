@@ -1,11 +1,12 @@
 import controller.EmployeeController;
+import util.ConsoleUtils;
 import util.HibernateUtils;
 import util.ScannerExt;
 
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static repository.Colors.*;
+import static util.Colors.*;
 
 public class CoffeeShopApplication {
 
@@ -18,7 +19,7 @@ public class CoffeeShopApplication {
         boolean quit = true;
 
         while (quit) {
-            System.out.println(ANSI_YELLOW + "Miresevini ne CoffeeShop Magazine");
+            ConsoleUtils.printYellowText("Miresevini ne CoffeeShop Magazine");
             System.out.println(ANSI_CYAN + "Zgjidhni nje nga opsionet me poshte!");
             System.out.println(ANSI_GREEN + "1.Login");
             System.out.println(ANSI_RED + "0.Quit");

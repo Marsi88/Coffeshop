@@ -183,8 +183,6 @@ public class SalesRepository {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Query query = session.createQuery("select o from Order o where isActive=1");
         query.stream().forEach(System.out::println);
-
-
     }
 
 }

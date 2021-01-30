@@ -1,20 +1,17 @@
 package controller;
 
 import model.Customer;
-import model.Employee;
 import model.Order;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 import repository.SalesRepository;
 import util.HibernateUtils;
 import util.ScannerExt;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 
-import static repository.Colors.ANSI_YELLOW_BACKGROUND;
+import static util.Colors.ANSI_YELLOW_BACKGROUND;
 
 
 public class SalesController {
@@ -156,7 +153,7 @@ public class SalesController {
         String city = this.scannerExt.scanField();
         System.out.println("Shteti");
         String country = this.scannerExt.scanField();
-
+//        Integer createdBy = EmployeeController.getCurrentEmployee().getEmployeeID();
         Customer customer = new Customer();
         EmployeeController employeeController = new EmployeeController(scannerExt);
         employeeController.setCurrentEmployee();
@@ -232,10 +229,11 @@ public class SalesController {
         salesRepository.removeClient(scannerExt);
     }
 
- public void listOrders(){
-     System.out.println("Listo Porosit");
+    public void listOrders() {
+        System.out.println("Listo Porosit");
         salesRepository.listOrder();
- }
+    }
+
     public void addOrder() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
