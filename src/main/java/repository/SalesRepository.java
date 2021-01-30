@@ -70,14 +70,12 @@ public class SalesRepository {
         session.close();
     }
 
-    public void editName(ScannerExt scannerExt) {
+    public void editName(Integer scanCustomerId,String editName) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-        Integer scanCustomerId = scannerExt.scanNumberField();
+
         Customer customer = session.find(Customer.class, scanCustomerId);
-        System.out.println("Shkruani emrin e ri");
-        String editName = scannerExt.scanField();
+
         customer.setFirstName(editName);
         session.update(customer);
         transaction.commit();

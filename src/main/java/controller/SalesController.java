@@ -159,7 +159,12 @@ public class SalesController {
 
             switch (choise) {
                 case 1:
-                   salesRepository.editName(scannerExt);
+                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
+                    Integer scanCustomerId = scannerExt.scanNumberField();
+                    System.out.println("Shkruani emrin e ri");
+                    String editName = scannerExt.scanField();
+                    salesRepository.editName(scanCustomerId, editName);
+
                     break;
 
                 case 2:
@@ -191,6 +196,7 @@ public class SalesController {
             }
         }
     }
+
     public void removeClient() {
         salesRepository.removeClient(scannerExt);
     }
