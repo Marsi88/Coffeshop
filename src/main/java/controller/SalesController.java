@@ -12,6 +12,7 @@ import util.ScannerExt;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 
 import static repository.Colors.ANSI_YELLOW_BACKGROUND;
 
@@ -64,21 +65,21 @@ public class SalesController {
         }
     }
 
-    private void soutOrderOptions(String s, String s2, String s3){
+    private void soutOrderOptions(String s, String s2, String s3) {
         System.out.println(s);
         System.out.println(s2);
         System.out.println(s3);
 
     }
 
-    public void ManageOrders(){
+    public void ManageOrders() {
         boolean back = true;
-        while (back){
+        while (back) {
             soutOrderOptions("Zgjidhni nje nga opsionet me poshte",
                     "1.Listo porosi",
                     "2.Shto porosi");
             Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2));
-            switch (choise){
+            switch (choise) {
                 case 1:
                     listOrders();
                     break;
@@ -136,7 +137,7 @@ public class SalesController {
 
     public void listClient() {
         System.out.println("Lista e klienteve !");
-salesRepository.listClient().forEach(System.out::println);
+        salesRepository.listClient();
 
     }
 
@@ -231,24 +232,22 @@ salesRepository.listClient().forEach(System.out::println);
         salesRepository.removeClient(scannerExt);
     }
 
-    public void  listOrders() {
-        salesRepository.listOrders().forEach(System.out::println);
-
-    }
-
+ public void listOrders(){
+     System.out.println("Listo Porosit");
+        salesRepository.listOrder();
+ }
     public void addOrder() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
 
-       // salesRepository.listClient().forEach(System.out::println);
+        // salesRepository.listClient().forEach(System.out::println);
 
         System.out.println("Vendosni id e klientit");
 
         Integer customerId = this.scannerExt.scanNumberField();
 
-Customer customer=new Customer();
-customer.setCustomerID(customerId);
-
+        Customer customer = new Customer();
+        customer.setCustomerID(customerId);
 
 
         System.out.println("Vendosni daten e berjes se porosise");
@@ -261,7 +260,7 @@ customer.setCustomerID(customerId);
         String status = this.scannerExt.scanField();
 
         Order order = new Order();
-order.setCustomer(customer);
+        order.setCustomer(customer);
 
         order.setOrderDate(orderDate);
         order.setRequiredDate(requiredDate);

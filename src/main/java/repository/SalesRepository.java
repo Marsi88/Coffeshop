@@ -12,7 +12,7 @@ import util.ScannerExt;
 import java.util.List;
 
 public class SalesRepository {
-    public Customer customer(Integer customerID, String firstName){
+    public Customer customer(Integer customerID, String firstName) {
         Session session = HibernateUtils.getSessionFactory().openSession();
 
         Query query = session.createQuery("from Customer c where c.customerID = :customerID and c.firstname = :firstName");
@@ -25,7 +25,7 @@ public class SalesRepository {
 
         List<Customer> customers = query.getResultList();
 
-        if(!customers.isEmpty()){
+        if (!customers.isEmpty()) {
             customer = customers.get(0);
         }
 
@@ -33,19 +33,23 @@ public class SalesRepository {
 
         return customer;
     }
+
     public void editClient() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Query query = session.createQuery("select c from Customer c ");
         List<Customer> customers = query.getResultList();
         customers.forEach(System.out::println);
     }
-    public List<Customer>  listClient() {
+
+    public void listClient() {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c where c.isActive=1");
+        Query query = session.createQuery("select distinct c from Customer c where c.isActive=1");
         List<Customer> listClient = query.getResultList();
+        listClient.forEach(System.out::println);
         session.close();
-        return listClient();
+
     }
+
     public void addClient(Customer customer) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Query query = session.createQuery("select c from Customer c");
@@ -55,6 +59,7 @@ public class SalesRepository {
         System.out.println("Klienti u shtua");
         session.close();
     }
+
     public void removeClient(ScannerExt scannerExt) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
@@ -70,7 +75,7 @@ public class SalesRepository {
         session.close();
     }
 
-    public void editName(Integer scanCustomerId,String editName) {
+    public void editName(Integer scanCustomerId, String editName) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -161,7 +166,7 @@ public class SalesRepository {
 
     public void editCountry(ScannerExt scannerExt) {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction  transaction = session.beginTransaction();
+        Transaction transaction = session.beginTransaction();
         System.out.println("Zgjidhni nje Id per te modifikuar klientin");
         Integer scanCustomerId = scannerExt.scanNumberField();
         Customer customer = session.find(Customer.class, scanCustomerId);
@@ -174,15 +179,13 @@ public class SalesRepository {
         session.close();
     }
 
-    public List<Order>  listOrders() {
+    public void listOrder() {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Order c where c.isActive=1");
-        List<Customer> listClient = query.getResultList();
-        session.close();
-        return listOrders();
+        Query query = session.createQuery("select o from Order o where isActive=1");
+        query.stream().forEach(System.out::println);
+
+
     }
-
-
 
 }
 
