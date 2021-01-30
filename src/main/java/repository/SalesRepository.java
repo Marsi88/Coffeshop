@@ -2,6 +2,7 @@ package repository;
 
 import com.mysql.cj.xdevapi.Client;
 import model.Customer;
+import model.Order;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -42,7 +43,6 @@ public class SalesRepository {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Query query = session.createQuery("select c from Customer c where c.isActive=1");
         List<Customer> listClient = query.getResultList();
-        listClient.forEach(System.out::println);
         session.close();
         return listClient();
     }
@@ -173,6 +173,16 @@ public class SalesRepository {
         System.out.println("Klienti u modifikua");
         session.close();
     }
+
+    public List<Order>  listOrders() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Query query = session.createQuery("select c from Order c where c.isActive=1");
+        List<Customer> listClient = query.getResultList();
+        session.close();
+        return listOrders();
+    }
+
+
 
 }
 
