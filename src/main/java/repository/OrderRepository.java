@@ -9,7 +9,11 @@ import util.HibernateUtils;
 
 import java.time.LocalDate;
 
-public class OrderRepository {
+public class OrderRepository extends AbstractRepository<Order>{
+
+    public OrderRepository(){
+        this.aClass = Order.class;
+    }
 
     public void listOrder() {
         Session session = HibernateUtils.getSessionFactory().openSession();

@@ -245,7 +245,7 @@ public class SalesController {
         Integer customerId = this.scannerExt.scanNumberField();
 
         Customer customer = new Customer();
-        customer.setCustomerID(customerId);
+        customer.setId(customerId);
 
 
         System.out.println("Vendosni daten e berjes se porosise");

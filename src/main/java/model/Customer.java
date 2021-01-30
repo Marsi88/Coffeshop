@@ -11,12 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "customers")
 @Data
-
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer customerID;
+public class Customer extends AbstractEntity{
 
     private String firstName;
 

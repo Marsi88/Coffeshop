@@ -1,4 +1,5 @@
 import controller.EmployeeController;
+import repository.EmployeeRepository;
 import util.ConsoleUtils;
 import util.HibernateUtils;
 import util.ScannerExt;
@@ -15,6 +16,10 @@ public class CoffeeShopApplication {
         HibernateUtils.getSessionFactory();
 
         ScannerExt scannerExt = new ScannerExt(new Scanner(System.in));
+
+        EmployeeRepository employeeRepository = new EmployeeRepository(scannerExt);
+
+        employeeRepository.list().forEach(System.out::println);
 
         boolean quit = true;
 

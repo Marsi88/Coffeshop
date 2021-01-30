@@ -10,10 +10,11 @@ import util.ScannerExt;
 import java.util.List;
 import java.util.Optional;
 
-public class EmployeeRepository implements Repository<Employee> {
+public class EmployeeRepository extends AbstractRepository<Employee> {
     private final ScannerExt scannerExt;
 
     public EmployeeRepository(ScannerExt scannerExt) {
+        this.aClass = Employee.class;
         this.scannerExt = scannerExt;
     }
 
@@ -120,59 +121,54 @@ public class EmployeeRepository implements Repository<Employee> {
 
     public List<Employee> getEmployeeIdNumbers() {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("SELECT employee.employeeID from Employee e");
+        Query query = session.createQuery("SELECT employee.id from Employee e");
         List<Employee> employees = query.getResultList();
         return employees;
     }
-
-    @Override
-    public List<Employee> list() {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("from Employee e where e.isworking=1");
-        List<Employee>employees=query.getResultList();
-        session.close();
-        return employees;
-    }
-
-    @Override
-    public Optional<Employee> findById(Integer id) {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("from Employee e where e.employeeID=:id and e.isworking=1");
-        List<Employee> employees = query.getResultList();
-        if (!employees.isEmpty()) {
-            return Optional.of(employees.get(0));
-        }
-        session.close();
-        return Optional.empty();
-    }
-
-    @Override
-    public void save(Employee employee) {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(employee);
-        transaction.commit();
-        session.close();
-    }
-
-    @Override
-    public void update(Employee employee) {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(employee);
-        transaction.commit();
-        session.close();
-    }
-
-    @Override
-    public void delete(Employee employee) {
-        employee.setIsworking(2);
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
-        session.update(employee);
-        transaction.commit();
-        session.close();
-    }
+//
+//    public List<Employee> list() {
+//        Session session = HibernateUtils.getSessionFactory().openSession();
+//        Query query = session.createQuery("from Employee e where e.isworking=1");
+//        List<Employee>employees=query.getResultList();
+//        session.close();
+//        return employees;
+//    }
+//
+//    public Optional<Employee> findById(Integer id) {
+//        Session session = HibernateUtils.getSessionFactory().openSession();
+//        Query query = session.createQuery("from Employee e where e.employeeID=:id and e.isworking=1");
+//        List<Employee> employees = query.getResultList();
+//        if (!employees.isEmpty()) {
+//            return Optional.of(employees.get(0));
+//        }
+//        session.close();
+//        return Optional.empty();
+//    }
+//
+//    public void save(Employee employee) {
+//        Session session = HibernateUtils.getSessionFactory().openSession();
+//        Transaction transaction = session.beginTransaction();
+//        session.save(employee);
+//        transaction.commit();
+//        session.close();
+//    }
+//
+//    public void update(Employee employee) {
+//        Session session = HibernateUtils.getSessionFactory().openSession();
+//        Transaction transaction = session.beginTransaction();
+//        session.update(employee);
+//        transaction.commit();
+//        session.close();
+//    }
+//
+//    public void delete(Employee employee) {
+//        employee.setIsworking(2);
+//        Session session = HibernateUtils.getSessionFactory().openSession();
+//        Transaction transaction = session.beginTransaction();
+//        session.update(employee);
+//        transaction.commit();
+//        session.close();
+//    }
 
     public Optional<Employee> findByUsername(String username) {
         Session session = HibernateUtils.getSessionFactory().openSession();

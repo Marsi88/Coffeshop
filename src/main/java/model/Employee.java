@@ -12,11 +12,7 @@ import java.util.Set;
 @Table(name = "employees")
 @Data
 
-public class Employee {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer employeeID;
+public class Employee extends AbstractEntity{
 
     private String firstName;
 

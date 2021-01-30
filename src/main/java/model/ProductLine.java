@@ -12,11 +12,7 @@ import java.util.Set;
 @Table(name = "productLines")
 @Data
 
-public class ProductLine {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idProductLines;
+public class ProductLine extends AbstractEntity{
 
     private String description;
 

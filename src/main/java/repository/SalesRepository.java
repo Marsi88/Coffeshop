@@ -15,7 +15,7 @@ public class SalesRepository {
     public Customer customer(Integer customerID, String firstName) {
         Session session = HibernateUtils.getSessionFactory().openSession();
 
-        Query query = session.createQuery("from Customer c where c.customerID = :customerID and c.firstname = :firstName");
+        Query query = session.createQuery("from Customer c where c.id = :customerID and c.firstname = :firstName");
 
         query.setParameter("customerID", customerID);
 

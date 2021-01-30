@@ -14,11 +14,7 @@ import java.util.Set;
 @Table(name = "orders")
 @Data
 
-public class Order {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+public class Order extends AbstractEntity{
 
     private LocalDate orderDate;
 
@@ -29,8 +25,6 @@ public class Order {
     private String status;
 
     private Integer isActive;
-
-
 
     @OneToMany(mappedBy = "order")
     @ToString.Exclude

@@ -48,7 +48,7 @@ public class EmployeeController {
             String password = this.scannerExt.scanField();
 
             Employee employee = this.employeeRepository.login(username, password);
-            System.out.println(employee.getEmployeeID());
+            System.out.println(employee.getId());
 
             if (Objects.isNull(employee)) {
                 System.out.println("Login i gabuar. Provo perseri");
@@ -69,7 +69,7 @@ public class EmployeeController {
 
     public Employee setCurrentEmployee() {
         employeeRepository.login(getCurrentEmployee().getUser(), getCurrentEmployee().getPassword());
-        getCurrentEmployee().getEmployeeID();
+        getCurrentEmployee().getId();
         return getCurrentEmployee();
     }
 
