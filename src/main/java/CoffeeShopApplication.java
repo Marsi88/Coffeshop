@@ -7,7 +7,7 @@ import util.ScannerExt;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static util.Colors.*;
+import static util.ColorsUtils.*;
 
 public class CoffeeShopApplication {
 
@@ -16,10 +16,6 @@ public class CoffeeShopApplication {
         HibernateUtils.getSessionFactory();
 
         ScannerExt scannerExt = new ScannerExt(new Scanner(System.in));
-
-        EmployeeRepository employeeRepository = new EmployeeRepository(scannerExt);
-
-        employeeRepository.list().forEach(System.out::println);
 
         boolean quit = true;
 

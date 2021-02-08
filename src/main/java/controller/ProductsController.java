@@ -1,11 +1,10 @@
 package controller;
 
+import model.Employee;
 import model.Product;
 import model.ProductLine;
-import org.hibernate.Session;
 import repository.ProductLinesRepository;
 import repository.ProductRepository;
-import util.HibernateUtils;
 import util.ScannerExt;
 
 import java.util.ArrayList;
@@ -16,11 +15,15 @@ public class ProductsController {
 
     private final ScannerExt scannerExt;
 
-    private ProductRepository productRepository;
+    public ProductRepository productRepository;
+    public ProductLinesRepository productLinesRepository;
+    public Product product;
 
     public ProductsController(ScannerExt scannerExt) {
         this.scannerExt = scannerExt;
-        this.productRepository = new ProductRepository();
+        this.productRepository = new ProductRepository(scannerExt);
+        this.product = new Product();
+        this.productLinesRepository = new ProductLinesRepository(scannerExt);
     }
 
     public void manageProducts() {
@@ -50,11 +53,7 @@ public class ProductsController {
 
     }
 
-
     public void addProduct() {
-        ProductLinesRepository productLinesRepository = new ProductLinesRepository();
-        Product product = new Product();
-
         System.out.println("Vendos Categorin e produktit e ri");
         List<ProductLine> productLines = productLinesRepository.list();
         List<Integer> choises = new ArrayList<>();
@@ -64,12 +63,12 @@ public class ProductsController {
             System.out.println(index + "." + pl.getDescription());
             index++;
         }
-        System.out.println("Zgjidh nje nga kategorit qe deshironi me shikuar");
+        System.out.println("Zgjidh nje nga kategorit qe deshironi me shtuar");
         Integer choise = scannerExt.scanRestrictedFieldNumber(choises);
         product.setProductLine(productLines.get(choise - 1));
         System.out.println("Vendosni emrin e produktit e ri");
         product.setName(this.scannerExt.scanField());
-        System.out.println("Sa kg per pako/thes do ket produkti ri?");
+        System.out.println("Shto Menyren Matese per produktin e ri (Thes/Pako)");
         product.setScale(scannerExt.scanField());
         System.out.println("Vendos nje pershkrim te shkurter mbi produktin e ri");
         product.setProductDescription(scannerExt.scanField());
@@ -77,164 +76,115 @@ public class ProductsController {
         product.setQuantityStock(this.scannerExt.scanNumberField());
         System.out.println("Cfare cmim shitje do ket produkti ri");
         product.setSellPrice(scannerExt.scanNumberField());
-
         productRepository.save(product);
     }
 
     public void listProducts() {
+        System.out.println("Shiko kategorit");
+        List<ProductLine> productLines = productLinesRepository.list();
+        List<Integer> choises = new ArrayList<>();
+        int index = 1;
+        for (ProductLine pl : productLines) {
+            choises.add(index);
+            System.out.println(index + "." + pl.getDescription());
+            index++;
+        }
+        System.out.println("zgjidh nje nga kategorit per te shikuar produktet !");
+        Integer productLineId = scannerExt.scanRestrictedFieldNumber(choises);
+        List<Product> products = productRepository.listByProductLineId(productLineId);
+        List<Integer> choises1 = new ArrayList<>();
+        int index2 = 1;
+        for (Product p : products) {
+            choises1.add(index2);
+            System.out.println(index2 + "." + p.getName());
+            index2++;
+        }
+        System.out.println("Zgjidh nje nga produktet ose 0 per te shkuar mbrapa");
+        choises1.add(0);
+        Integer choise = scannerExt.scanRestrictedFieldNumber(choises1);
+        if (choise == 0) {
+            return;
+        } else {
+            boolean goback = true;
+            while (goback) {
+                System.out.println("Zgjidh nje nga opsionet" +
+                        "\n0. Shko Mbrapa" +
+                        "\n1.Shiko detajet e plota" +
+                        "\n2.edit " +
+                        "\n3.fshi");
+                Product product = products.get(choise - 1);
+                Integer operationChoise = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1, 2, 3));
+                switch (operationChoise) {
+                    case 1:
+                        System.out.println(product.printToConsole());
+                        break;
+                    case 2:
+                        this.editProduct(product);
+                        goback = false;
+                        break;
+                    case 3:
+                        this.removeProduct(product);
+                        goback = false;
+                        break;
+                    default:
+                        goback = false;
+                        break;
+                }
+            }
+        }
+    }
+
+    public void editProduct(Product product) {
         boolean back = true;
         while (back) {
-            System.out.println("Ke kategori deshiren te shikosh ?" +
-                    "\n 1. COFFEE"
-                    + "\n 2. TEA" +
-                    "\n 3. COCOA" +
-                    "\n 4. SALEP" +
-                    "\n 5. SHEQER" +
-                    "\n 6. TE GJITHA" +
-                    "\n 7 BACK");
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
-            back = listProductsSwitch(back, choise);
+            boolean firstEdit = true;
+            boolean isEditing = true;
+            while (isEditing) {
+                System.out.println("Zgjidh fushen" + (firstEdit ? "" : " tjeter") + " qe deshiron te ndryshosh" +
+                        "\n 0.Shko Mbrapa" +
+                        "\n 1.Emrin " +
+                        "\n 2. Description" +
+                        "\n 3.Cmimin" +
+                        "\n 4.Quantity");
+                Integer editChoise = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1, 2, 3, 4));
+
+                switch (editChoise) {
+                    case 1:
+                        System.out.println("Vendosni vleren e re");
+                        product.setName(scannerExt.scanField());
+                        break;
+
+                    case 2:
+                        System.out.println("Vendosni vleren e re");
+                        product.setProductDescription(scannerExt.scanField());
+
+                        break;
+                    case 3:
+                        System.out.println("Vendosni vleren e re");
+                        product.setSellPrice(scannerExt.scanNumberField());
+
+                        break;
+                    case 4:
+                        System.out.println("Vendosni vleren e re");
+                        product.setQuantityStock(scannerExt.scanNumberField());
+                        break;
+
+                    default:
+                        isEditing = false;
+                        back=false;
+                        break;
+
+                }
+                firstEdit = false;
+            }
+            productRepository.update(product);
         }
     }
 
-    private boolean listProductsSwitch(boolean back, Integer choise) {
-        switch (choise) {
-
-            case 1:
-                productRepository.listCoffee();
-
-                break;
-            case 2:
-                productRepository.listTea();
-                break;
-            case 3:
-                List<Object[]> listCocoa = productRepository.listCocoa();
-                listCocoa.forEach(name -> {
-                    System.out.print("  IdCategory : " + name[0]);
-                    System.out.print(" " + name[1]);
-                    System.out.println(" , ");
-                });
-                break;
-            case 4:
-                List<Object[]> listSalep = productRepository.listSalep();
-                listSalep.forEach(seat -> {
-                    System.out.print("  IdCategory : " + seat[0]);
-                    System.out.print(" " + seat[1]);
-                    System.out.println(" , ");
-                });
-            case 5:
-                List<Object[]> listSheqer = productRepository.listSheqer();
-                listSheqer.forEach(seat -> {
-                    System.out.print("  IdCategory : " + seat[0]);
-                    System.out.print(" " + seat[1]);
-                    System.out.println(" , ");
-                });
-
-                break;
-
-            case 6:
-                List<Object[]> listAll = productRepository.listAll();
-                listAll.forEach(seat -> {
-                    System.out.print("  IdCategory : " + seat[0]);
-                    System.out.print(" " + seat[1]);
-                    System.out.println(" , ");
-                });
-
-                break;
-
-            case 7:
-                back = false;
-                break;
-
-            default:
-                break;
-        }
-        return back;
-    }
-
-    public void removeProduct() {
-        listProduct();
-        productRepository.removeProduct(scannerExt);
-
-    }
-
-
-    public void editPrduct() {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        boolean back = true;
-        while (back) {
-
-            System.out.println("\nWhat you want to edit?" + "\n1. Name" + "\n2 selling price" + "\n3 scale" + "\n4 productDescription" + "\n5 quantity" + "\n6 Reactive a product" + "\n7 back");
-
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5, 6, 7));
-
-            back = editProductSwitch(session, back, choise);
-        }
-    }
-
-    private boolean editProductSwitch(Session session, boolean back, Integer choise) {
-        switch (choise) {
-            case 1:
-                listProduct();
-                productRepository.editName(scannerExt);
-                break;
-
-            case 2:
-                listProduct();
-                productRepository.editPrice(scannerExt);
-                break;
-            case 3:
-                listProduct();
-                productRepository.editScale(scannerExt);
-
-                break;
-            case 4:
-                listProduct();
-                productRepository.editDescription(scannerExt);
-
-
-                break;
-            case 5:
-                listProduct();
-                productRepository.editQuantity(scannerExt);
-                break;
-
-            case 6:
-                listProduct();
-                productRepository.reactivateProduct(scannerExt);
-                break;
-
-            case 7:
-                System.out.println("Loging out" +
-                        "\n Goodbye");
-                back = false;
-                break;
-            default:
-                session.close();
-                break;
-        }
-        return back;
-    }
-
-
-    private void listProduct() {
-        List<Object[]> listProductsForEdit = productRepository.listProductsForEdit();
-        listProductsForEdit.forEach(seat -> {
-            soutListProductForEdit(seat);
-
-        });
-    }
-
-    private void soutListProductForEdit(Object[] field) {
-        System.out.print("IdCategory : " + field[0]);
-        System.out.print(" - ProductId :  " + field[1]);
-        System.out.print(" - name: " + field[2]);
-        System.out.print(" - Details: " + field[3]);
-        System.out.print(" - quantity: " + field[4]);
-        System.out.print(" - scale: " + field[5]);
-        System.out.print(" - selling: " + field[6]);
-        System.out.print(" - IsActive: " + field[7]);
-        System.out.println(" , ");
+    public void removeProduct(Product product) {
+        productRepository.delete(product);
+        System.out.println("Produkti u fshi me sukses");
     }
 
 }
+

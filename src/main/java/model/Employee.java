@@ -28,7 +28,6 @@ public class Employee extends AbstractEntity{
 
     private String password;
 
-    private Integer isworking = 1;
 
 
     @OneToMany(mappedBy = "employee")

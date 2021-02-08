@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "productLines")
 @Data
 
-public class ProductLine extends AbstractEntity{
+public class ProductLine extends AbstractEntity {
 
     private String description;
 
@@ -20,8 +20,6 @@ public class ProductLine extends AbstractEntity{
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<Product> products = new HashSet<>();
-
-
 
 
 }

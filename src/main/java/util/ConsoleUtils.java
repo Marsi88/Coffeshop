@@ -1,7 +1,7 @@
 package util;
 
-import static util.Colors.ANSI_RESET;
-import static util.Colors.ANSI_YELLOW;
+import static util.ColorsUtils.ANSI_RESET;
+import static util.ColorsUtils.ANSI_YELLOW;
 
 public class ConsoleUtils {
     public static void printYellowText(String text) {

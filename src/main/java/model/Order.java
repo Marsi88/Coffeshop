@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "orders")
 @Data
 
-public class Order extends AbstractEntity{
+public class Order extends AbstractEntity {
 
     private LocalDate orderDate;
 
@@ -24,24 +24,17 @@ public class Order extends AbstractEntity{
 
     private String status;
 
-    private Integer isActive;
 
     @OneToMany(mappedBy = "order")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JoinColumn(name="customerId")
+    @JoinColumn(name = "customerId")
     private Customer customer;
-
-
-
-
-
-
 
 
 }

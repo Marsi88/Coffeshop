@@ -27,7 +27,6 @@ public class Customer extends AbstractEntity{
 
     private String country;
 
-    private Integer isActive;
 
     @OneToMany(mappedBy = "customer")
     @ToString.Exclude

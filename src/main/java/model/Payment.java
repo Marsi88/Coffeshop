@@ -10,13 +10,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "payments")
 @Data
-public class Payment{
+public class Payment  extends AbstractEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer checknum;
+
 
     private String paymentDate;
+
 
 
     @ManyToOne(fetch = FetchType.LAZY)

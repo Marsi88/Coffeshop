@@ -27,11 +27,4 @@ public class OrderProduct extends AbstractEntity{
     @EqualsAndHashCode.Exclude
     @JoinColumn(name="orderId")
     private Order order;
-
-
-
-
-
-
-
 }
