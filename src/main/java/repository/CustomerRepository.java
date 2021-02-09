@@ -18,14 +18,5 @@ public class CustomerRepository extends AbstractRepository<Customer> {
         this.scannerExt = scannerExt;
     }
 
-    public Optional<Customer> findByName(String firstName) {
-        Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c where c.firstName = :firstName and c.isDeleted=false");
-        query.setParameter("firstName", firstName);
-        List<Customer> customers = query.getResultList();
-        session.close();
-        if (!customers.isEmpty())
-            return Optional.of(customers.get(0));
-        return Optional.empty();
-    }
+
 }

@@ -2,7 +2,6 @@ package controller;
 
 import model.Employee;
 import repository.EmployeeRepository;
-import repository.ProductRepository;
 import util.ScannerExt;
 
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public class EmployeeController {
                     manageEmployees();
                     break;
                 case 2:
-                    ProductsController productsController = new ProductsController(scannerExt);
+                    ProductController productsController = new ProductController(scannerExt);
                     productsController.manageProducts();
                 case 3:
                     logout = false;
@@ -189,7 +188,7 @@ public class EmployeeController {
                         break;
                     default:
                         isEditing = false;
-                        back=false;
+                        back = false;
                         break;
                 }
                 firstEdit = false;
@@ -198,6 +197,7 @@ public class EmployeeController {
         }
 
     }
+
     public void removeEmployee(Employee employee) {
         employeeRepository.delete(employee);
         System.out.println("Useri u fshi me sukses");

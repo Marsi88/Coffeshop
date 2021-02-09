@@ -10,16 +10,24 @@ import util.HibernateUtils;
 import util.ScannerExt;
 
 import java.util.List;
+import java.util.Optional;
 
-public class SalesRepository {
+public class SalesRepository extends AbstractRepository<Customer> {
+    private final ScannerExt scannerExt;
+
+    public SalesRepository(ScannerExt scannerExt) {
+        this.scannerExt = scannerExt;
+        this.aClass = Customer.class;
+    }
+
     public Customer customer(Integer customerID, String firstName) {
         Session session = HibernateUtils.getSessionFactory().openSession();
 
-        Query query = session.createQuery("from Customer c where c.id = :customerID and c.firstname = :firstName");
+        Query query = session.createQuery("select c from Customer c where c.id = :customerID and c.firstName = :firstName");
 
         query.setParameter("customerID", customerID);
 
-        query.setParameter("firstname", firstName);
+        query.setParameter("firstName", firstName);
 
         Customer customer = null;
 
@@ -33,16 +41,27 @@ public class SalesRepository {
         return customer;
     }
 
-    public void editClient() {
+    public void editCustomer() {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select c from Customer c ");
+        Query query = session.createQuery("select c from Customer c where  c.isDeleted=false");
         List<Customer> customers = query.getResultList();
         customers.forEach(System.out::println);
+        session.close();
+    }
+    public Optional<Customer> findByCustomerFirstName(String firstName) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Query query = session.createQuery("select c from Customer c where c.firstName = :firstName and c.isDeleted=false");
+        query.setParameter("firstName", firstName);
+        List<Customer> customers = query.getResultList();
+        session.close();
+        if (!customers.isEmpty())
+            return Optional.of(customers.get(0));
+        return Optional.empty();
     }
 
-    public void listClient() {
+    public void listCustomer() {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        Query query = session.createQuery("select distinct c from Customer c where c.isActive=1");
+        Query query = session.createQuery("select distinct c from Customer c where c.isDeleted=false");
         List<Customer> listClient = query.getResultList();
         listClient.forEach(System.out::println);
         session.close();

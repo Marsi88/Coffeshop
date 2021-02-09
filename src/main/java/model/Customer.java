@@ -44,4 +44,13 @@ public class Customer extends AbstractEntity{
     @JoinColumn(name = "employeeID")
     private Employee employee;
 
+    public String printToConsole() {
+        return "Emri: " + this.firstName
+                + "\n Mbiemri: " + this.lastName
+                + "\n Email :" + this.email
+                + "\n Numri telefonit : " + this.phone
+                + "\n Qyteti : " + this.city;
+    }
+
+
 }

@@ -12,7 +12,6 @@ import static util.ColorsUtils.*;
 public class CoffeeShopApplication {
 
     public static void main(String[] args) {
-        //init hibernate
         HibernateUtils.getSessionFactory();
 
         ScannerExt scannerExt = new ScannerExt(new Scanner(System.in));

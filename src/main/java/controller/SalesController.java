@@ -3,15 +3,12 @@ package controller;
 
 import model.Customer;
 import model.Order;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import repository.CustomerRepository;
 import repository.SalesRepository;
-import util.HibernateUtils;
 import util.ScannerExt;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static util.ColorsUtils.ANSI_RESET;
 import static util.ColorsUtils.ANSI_YELLOW_BACKGROUND;
@@ -20,14 +17,19 @@ import static util.ColorsUtils.ANSI_YELLOW_BACKGROUND;
 public class SalesController {
 
     private final ScannerExt scannerExt;
-
-    private CustomerRepository customerRepository;
+    private SalesRepository salesRepository;
+    private CustomerController customerController;
+    private OrderController orderController;
+    private ProductController productController;
 
     private static Customer currentCustomer;
 
     public SalesController(ScannerExt scannerExt) {
         this.scannerExt = scannerExt;
-        this.customerRepository = new CustomerRepository(scannerExt);
+        this.salesRepository = new SalesRepository(scannerExt);
+        this.customerController = new CustomerController(scannerExt);
+        this.orderController = new OrderController(scannerExt);
+        this.productController = new ProductController(scannerExt);
     }
 
     public static Customer getCurrentCustomer() {
@@ -38,8 +40,8 @@ public class SalesController {
         boolean back = true;
         while (back) {
             System.out.println(ANSI_YELLOW_BACKGROUND + "Zgjidhni nje nga opsionet me poshte!" + ANSI_RESET);
-            System.out.println("1.Porosit");
-            System.out.println("2.Klientet");
+            System.out.println("1.Manaxho Porosit");
+            System.out.println("2.Manaxho Klientet");
             System.out.println("3.Back!");
 
             Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
@@ -49,11 +51,8 @@ public class SalesController {
                 case 1:
                     salesController.ManageOrders();
                     break;
-//                case 2:
-//                    orderController.addOrder();
-//                    break;
                 case 2:
-                    salesController.ManageClient();
+                    salesController.ManageCustomer();
                     break;
 
                 case 3:
@@ -63,51 +62,54 @@ public class SalesController {
                     break;
             }
         }
-    }
-
-    private void soutOrderOptions(String s, String s2, String s3) {
-        System.out.println(s);
-        System.out.println(s2);
-        System.out.println(s3);
-
     }
 
     public void ManageOrders() {
         boolean back = true;
         while (back) {
-            soutOrderOptions("Zgjidhni nje nga opsionet me poshte",
-                    "1.Listo porosi",
-                    "2.Shto porosi");
-//            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2));
-//            switch (choise) {
-//                case 1:
+            System.out.println("Zgjidhni nje nga opsionet me poshte : " +
+                    "\n1.Listo porosi" +
+                    "\n2.Shto porosi" +
+                    "\n3.Ndrysho porosi" +
+                    "\n4.Shko mbrapa");
+            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2));
+            switch (choise) {
+                case 1:
 //                    listOrders();
-//                    break;
-//
-//                case 2:
-//                    addOrder();
-//                    break;
-//            }
+                    break;
+                case 2:
+                    Order order = orderController.addOrder();
+                    productController.selectProduct(order);
+                    break;
+                case 3:
+//                    editOrder();
+                    break;
+                case 4:
+                    back = false;
+                    break;
+                default:
+                    break;
+            }
+
 
         }
     }
 
-
-    public void ManageClient() {
+    public void ManageCustomer() {
         boolean back = true;
         while (back) {
             System.out.println("Zgjidhni nje nga opsionet me poshte" +
-                    "1.Shto Klient" +
-                    "2.Listo Klientet" +
-                    "3.Back!");
+                    "\n1.Shto Klient" +
+                    "\n2.Listo Klientet" +
+                    "\n3.Back!");
 
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5));
+            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
             switch (choise) {
                 case 1:
-                    addClient();
+                    customerController.addClient();
                     break;
                 case 2:
-                    listClient();
+                    customerController.listClient();
                     break;
 
                 case 3:
@@ -118,135 +120,4 @@ public class SalesController {
             }
         }
     }
-
-    public void listClient() {
-        System.out.println("Lista e klienteve !");
-        customerRepository.list();
-
-    }
-
-    public void addClient() {
-        Customer customer=new Customer();
-        EmployeeController employeeController = new EmployeeController(scannerExt);
-        System.out.println("Vendosni emrin e klientit");
-        customer.setFirstName(scannerExt.scanField());
-        System.out.println("Vendosni mbiemrin e klientit");
-        customer.setLastName( this.scannerExt.scanField());
-        System.out.println("Vendosni emailin e klientit");
-        customer.setEmail(this.scannerExt.scanField());
-        System.out.println("Numri i kontaktit");
-        customer.setPhone( scannerExt.scanNumberField());
-        System.out.println("Adresa");
-        customer.setAddress(this.scannerExt.scanField());
-        System.out.println("Qyteti");
-        customer.setCity(this.scannerExt.scanField());
-        System.out.println("Shteti");
-        customer.setCountry(this.scannerExt.scanField());
-        customer.setEmployee(employeeController.setCurrentEmployee());
-        customerRepository.save(customer);
-    }
-
-//    public void editClient() {
-//
-//        boolean back = true;
-//        while (back) {
-//            System.out.println("\nCfare doni te modifikoni?" +
-//                    "\n1.Emrin" +
-//                    "\n2 Mbiemrin" +
-//                    "\n3 Emailin" +
-//                    "\n4 Numrin e Kontaktit" +
-//                    "\n5 Adresen" +
-//                    "\n6 Qytetin" +
-//                    "\n7 Shtetin" +
-//                    "\n8 back");
-//
-//            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
-//
-//            switch (choise) {
-//                case 1:
-//                    System.out.println("Zgjidhni nje Id per te modifikuar klientin");
-//                    Integer scanCustomerId = scannerExt.scanNumberField();
-//                    System.out.println("Shkruani emrin e ri");
-//                    String editName = scannerExt.scanField();
-//                    salesRepository.editName(scanCustomerId, editName);
-//
-//                    break;
-//
-//                case 2:
-//                    salesRepository.editLastname(scannerExt);
-//                    break;
-//
-//                case 3:
-//                    salesRepository.editEmail(scannerExt);
-//                    break;
-//
-//                case 4:
-//                    salesRepository.editPhone(scannerExt);
-//                    break;
-//
-//                case 5:
-//                    salesRepository.editAddress(scannerExt);
-//                    break;
-//
-//                case 6:
-//                    salesRepository.editCity(scannerExt);
-//                    break;
-//
-//                case 7:
-//                    salesRepository.editCountry(scannerExt);
-//                    break;
-//                case 8:
-//                    back = false;
-//                    break;
-//            }
-//        }
-//    }
-//
-//    public void removeClient() {
-//        salesRepository.removeClient(scannerExt);
-//    }
-//
-//    public void listOrders() {
-//        System.out.println("Listo Porosit");
-//        salesRepository.listOrder();
-//    }
-//
-//    public void addOrder() {
-//        Session session = HibernateUtils.getSessionFactory().openSession();
-//        Transaction transaction = session.beginTransaction();
-//
-//        // salesRepository.listClient().forEach(System.out::println);
-//
-//        System.out.println("Vendosni id e klientit");
-//
-//        Integer customerId = this.scannerExt.scanNumberField();
-//
-//        Customer customer = new Customer();
-//        customer.setId(customerId);
-//
-//
-//        System.out.println("Vendosni daten e berjes se porosise");
-//        LocalDate orderDate = scannerExt.scanDateField();
-//        System.out.println("Vendosni daten e dorezimit");
-//        LocalDate requiredDate = scannerExt.scanDateField();
-//        System.out.println("Vendosni daten kur u dorezua");
-//        LocalDate shippedDate = scannerExt.scanDateField();
-//        System.out.println("Vendosni statusin");
-//        String status = this.scannerExt.scanField();
-//
-//        Order order = new Order();
-//        order.setCustomer(customer);
-//
-//        order.setOrderDate(orderDate);
-//        order.setRequiredDate(requiredDate);
-//        order.setShippedDate(shippedDate);
-//        order.setStatus(status);
-//        session.save(order);
-//        transaction.commit();
-//        System.out.println("Porosia u shtua");
-//        session.close();
-//    }
-
 }
-
-//

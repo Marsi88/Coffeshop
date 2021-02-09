@@ -13,14 +13,14 @@ public abstract class AbstractRepository<T extends AbstractEntity> {
 
     public List<T> list() {
         Session session = HibernateUtils.getSessionFactory().openSession();
-        List<T>list=session.createQuery("from " + aClass.getSimpleName() + " t where t.isDeleted = false").getResultList();
+        List<T> list = session.createQuery("from " + aClass.getSimpleName() + " t where t.isDeleted = false").getResultList();
         session.close();
         return list;
     }
 
     public Optional<T> findById(Integer id) {
         Session session = HibernateUtils.getSessionFactory().openSession();
-session.close();
+        session.close();
         return Optional.of(session.find(aClass, id));
     }
 
