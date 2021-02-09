@@ -72,7 +72,7 @@ public class SalesController {
                     "\n2.Shto porosi" +
                     "\n3.Ndrysho porosi" +
                     "\n4.Shko mbrapa");
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2));
+            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1,2,3,4));
             switch (choise) {
                 case 1:
 //                    listOrders();

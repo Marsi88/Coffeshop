@@ -230,7 +230,14 @@ public class ProductController {
                 switch (operationChoise) {
                     case 1:
                         orderProductController.addOrderProduct(order, product);
-                        goback=false;
+                        System.out.println("Deshiron te shtosh dicka tjeter ne porosin " +
+                                "\nPO - JO");
+                        String addMoreToCart=scannerExt.scanField();
+                        if ("PO".equalsIgnoreCase(addMoreToCart))
+                            selectProduct(order);
+                        else
+                            System.out.println("Porosia u shtua me sukses");
+                            goback=false;
                         break;
                     default:
                         goback = false;
