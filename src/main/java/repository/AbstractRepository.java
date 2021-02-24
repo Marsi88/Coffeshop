@@ -20,8 +20,9 @@ public abstract class AbstractRepository<T extends AbstractEntity> {
 
     public Optional<T> findById(Integer id) {
         Session session = HibernateUtils.getSessionFactory().openSession();
+        Optional<T>objectOptional=Optional.of(session.find(aClass, id));
         session.close();
-        return Optional.of(session.find(aClass, id));
+        return objectOptional;
     }
 
     public void save(T t) {

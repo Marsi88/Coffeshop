@@ -195,55 +195,62 @@ public class ProductController {
     }
 
     public void selectProduct(Order order) {
-        System.out.println("Shiko kategorit");
-        List<ProductLine> productLines = productLinesRepository.list();
-        List<Integer> choises = new ArrayList<>();
-        int index = 1;
-        for (ProductLine pl : productLines) {
-            choises.add(index);
-            System.out.println(index + "." + pl.getDescription());
-            index++;
-        }
-        System.out.println("zgjidh nje nga kategorit per te shikuar produktet !");
-        Integer productLineId = scannerExt.scanRestrictedFieldNumber(choises);
-        List<Product> products = productRepository.listByProductLineId(productLineId);
-        List<Integer> choises1 = new ArrayList<>();
-        int index2 = 1;
-        for (Product p : products) {
-            choises1.add(index2);
-            System.out.println(index2 + "." + p.getName());
-            index2++;
-        }
-        System.out.println("Zgjidh nje nga produktet ose 0 per te shkuar mbrapa");
-        choises1.add(0);
-        Integer choise = scannerExt.scanRestrictedFieldNumber(choises1);
-        if (choise == 0) {
-            return;
-        } else {
-            boolean goback = true;
-            while (goback) {
-                System.out.println("Zgjidh nje nga opsionet" +
-                        "\n0. Shko Mbrapa" +
-                        "\n1.Shto ne shport");
-                Product product = products.get(choise - 1);
-                Integer operationChoise = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1));
-                switch (operationChoise) {
-                    case 1:
-                        orderProductController.addOrderProduct(order, product);
-                        System.out.println("Deshiron te shtosh dicka tjeter ne porosin " +
-                                "\nPO - JO");
-                        String addMoreToCart=scannerExt.scanField();
-                        if ("PO".equalsIgnoreCase(addMoreToCart))
-                            selectProduct(order);
-                        else
+        boolean isEditing = true;
+        while (isEditing) {
+            System.out.println("Shiko kategorit");
+            List<ProductLine> productLines = productLinesRepository.list();
+            List<Integer> choises = new ArrayList<>();
+            int index = 1;
+            for (ProductLine pl : productLines) {
+                choises.add(index);
+                System.out.println(index + "." + pl.getDescription());
+                index++;
+            }
+
+            System.out.println("zgjidh nje nga kategorit per te shikuar produktet !");
+            Integer productLineId = scannerExt.scanRestrictedFieldNumber(choises);
+            List<Product> products = productRepository.listByProductLineId(productLineId);
+            List<Integer> choises1 = new ArrayList<>();
+            int index2 = 1;
+            for (Product p : products) {
+                choises1.add(index2);
+                System.out.println(index2 + "." + p.getName());
+                index2++;
+            }
+            System.out.println("Zgjidh nje nga produktet ose 0 per te shkuar mbrapa");
+            choises1.add(0);
+            Integer choise = scannerExt.scanRestrictedFieldNumber(choises1);
+            if (choise == 0) {
+                return;
+            } else {
+                boolean goback = true;
+                while (goback) {
+                    System.out.println("Zgjidh nje nga opsionet" +
+                            "\n0. Shko Mbrapa" +
+                            "\n1.Shto ne shport");
+                    Product product = products.get(choise - 1);
+                    Integer operationChoise = scannerExt.scanRestrictedFieldNumber(Arrays.asList(0, 1));
+                    switch (operationChoise) {
+                        case 1:
+                            orderProductController.addOrderProduct(order, product);
+                            System.out.println("Deshiron te shtosh dicka tjeter ne porosin " +
+                                    "\nPO - JO");
+                            String addMoreToCart = scannerExt.scanField();
+                            if ("PO".equalsIgnoreCase(addMoreToCart))
+                                isEditing = true;
+                            else
+                                isEditing = false;
                             System.out.println("Porosia u shtua me sukses");
-                            goback=false;
-                        break;
-                    default:
-                        goback = false;
-                        break;
+                            orderController.showOrderDetails(order);
+                            goback = false;
+                            break;
+                        default:
+                            goback = false;
+                            break;
+                    }
                 }
             }
         }
+
     }
 }

@@ -40,7 +40,7 @@ public class CustomerController {
                 System.out.println("Zgjidh nje nga opsionet" +
                         "\n0. Shko Mbrapa" +
                         "\n1.Shiko detajet e plota" +
-                        "\n2.edit " +
+                        "\n2.ndrysho " +
                         "\n3.fshi");
                 Customer customer = customers.get(choise - 1);
 

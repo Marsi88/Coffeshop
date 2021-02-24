@@ -24,6 +24,8 @@ public class Order extends AbstractEntity {
 
     private String status;
 
+    private boolean ispaid;
+
 
     @OneToMany(mappedBy = "order")
     @ToString.Exclude

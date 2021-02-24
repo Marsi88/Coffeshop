@@ -68,30 +68,21 @@ public class SalesController {
         boolean back = true;
         while (back) {
             System.out.println("Zgjidhni nje nga opsionet me poshte : " +
-                    "\n1.Listo porosi" +
-                    "\n2.Shto porosi" +
-                    "\n3.Ndrysho porosi" +
-                    "\n4.Shko mbrapa");
-            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1,2,3,4));
+                    "\n1.Shto porosi" +
+                    "\n2.Shko mbrapa");
+            Integer choise = this.scannerExt.scanRestrictedFieldNumber(Arrays.asList(1, 2, 3));
             switch (choise) {
+
                 case 1:
-//                    listOrders();
-                    break;
-                case 2:
                     Order order = orderController.addOrder();
                     productController.selectProduct(order);
                     break;
-                case 3:
-//                    editOrder();
-                    break;
-                case 4:
+                case 2:
                     back = false;
                     break;
                 default:
                     break;
             }
-
-
         }
     }
 

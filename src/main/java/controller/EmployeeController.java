@@ -136,7 +136,7 @@ public class EmployeeController {
                 System.out.println("Zgjidh nje nga opsionet" +
                         "\n0. Shko Mbrapa" +
                         "\n1.Shiko detajet e plota" +
-                        "\n2.edit " +
+                        "\n2.ndrysho " +
                         "\n3.fshi");
                 Employee employee = employees.get(choise - 1);
 
@@ -221,7 +221,7 @@ public class EmployeeController {
                 System.out.println("Te vendosi username unik:");
                 String username = this.scannerExt.scanField();
                 if (employeeRepository.findByUsername(username).isPresent()) {
-                    System.out.println("Username taken try another");
+                    System.out.println("useri i perdorur vendos tjeter");
                 } else {
                     invalidUsername = false;
                     employee.setUser(username);
