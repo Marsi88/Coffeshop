@@ -1,6 +1,6 @@
 # CoffeeShopProject.
 CoffeeShopRepo.
-#Not unfinished yet.
+#In progress.
 #JAVA
 #DATABASE
 #HIBERNATE
